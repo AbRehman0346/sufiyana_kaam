@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../xutils/widgets/xtext.dart';
+
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
 
@@ -8,32 +10,53 @@ class NoteScreen extends StatefulWidget {
 }
 
 class _NoteScreenState extends State<NoteScreen> {
-  late double _height;
-  late double _width;
+  late double _screenHeight;
+  late double _screenWidth;
 
   @override
   Widget build(BuildContext context) {
-    _height = MediaQuery.of(context).size.height;
-    _width = MediaQuery.of(context).size.width;
+    _screenHeight = MediaQuery.of(context).size.height;
+    _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Note"),),
+      appBar: AppBar(title: XText("Note"),),
       body: SizedBox(
-        width: _width,
+        width: _screenWidth,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text("Crate an App", ),
-            ),
+            buildTask(),
+
+            buildTask(),
+            buildTask(),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildTask(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: XText("Crate an App", size: 20,),
+    );
+  }
+
+  Widget _height(double height) {
+    return SizedBox(
+      height: height,
+    );
+
+  }
+
+  Widget _width(double width) {
+    return SizedBox(
+      height: width,
+    );
+
   }
 }
