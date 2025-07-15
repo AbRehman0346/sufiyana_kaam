@@ -8,9 +8,10 @@ class XText extends StatelessWidget {
   final bool lineThrough;
   final bool bold;
   final bool halfBold;
+  final bool center;
   final int? maxLines;
   final TextOverflow? overflow;
-  final TextAlign? textAlign;
+  TextAlign? textAlign;
   final String? fontFamily;
   final double? letterSpacing;
   XText(
@@ -28,11 +29,17 @@ class XText extends StatelessWidget {
         this.textAlign,
         this.fontFamily,
         this.letterSpacing,
+        this.center = false,
       })
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    if(textAlign == null && center){
+      textAlign = TextAlign.center;
+    }
+
     if(weight == null){
       if(bold){
         weight = FontWeight.bold;
