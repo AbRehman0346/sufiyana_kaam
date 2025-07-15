@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
 import 'package:sufiyana_kaam/services/database-services.dart';
@@ -80,8 +83,6 @@ class _HomeState extends State<Home> {
                         var process = Process.fromMap(processes[index]);
                         return _ProjectCard(
                           process: process,
-                          completed: 8,
-                          total: 10,
                         );
                       }),
                     );
@@ -129,14 +130,10 @@ class _HomeState extends State<Home> {
 
 class _ProjectCard extends StatelessWidget {
   final Process process;
-  final int completed;
-  final int total;
 
   const _ProjectCard({
     super.key,
     required this.process,
-    required this.completed,
-    required this.total,
   });
 
   @override
@@ -172,9 +169,28 @@ class _ProjectCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  '$completed/$total tasks',
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                FutureBuilder(
+                  future: DatabaseServices.create().fetchProcessTasks(process.id!),
+                  builder: (context, AsyncSnapshot snap) {
+                    if(!snap.hasData){
+                      return XText("Loading...", color: Colors.white70, size: 16);
+                    }
+
+                    List<ProcessTask> tasks = snap.data;
+                    int completed = 0;
+                    int total = tasks.length;
+
+                    for(int i=0; i<tasks.length; i++){
+                      if(tasks[i].isCompleted){
+                        completed++;
+                      }
+                    }
+
+                    return Text(
+                      '$completed/$total tasks',
+                      style: const TextStyle(color: Colors.white70, fontSize: 16),
+                    );
+                  }
                 ),
               ],
             ),

@@ -50,6 +50,14 @@ class ProcessTask{
       status: map[f.status] ?? "pending", // Default status if not provided
     );
   }
+
+  bool get isPending => status.toLowerCase() == ProcessTaskStatus.pending.toLowerCase();
+
+  bool get isInProgress => status.toLowerCase() == ProcessTaskStatus.inProgress.toLowerCase();
+
+  bool get isCompleted => status.toLowerCase() == ProcessTaskStatus.completed.toLowerCase();
+
+  bool get isCancelled => status.toLowerCase() == ProcessTaskStatus.cancelled.toLowerCase();
 }
 
 class ProcessTaskStatus {
@@ -64,22 +72,6 @@ class ProcessTaskStatus {
     completed,
     cancelled,
   ];
-
-  static bool isPending(String status) {
-    return status.toLowerCase() == pending.toLowerCase();
-  }
-
-  static bool isInProgress(String status) {
-    return status.toLowerCase() == inProgress.toLowerCase();
-  }
-
-  static bool isCompleted(String status) {
-    return status.toLowerCase() == completed.toLowerCase();
-  }
-
-  static bool isCancelled(String status) {
-    return status.toLowerCase() == cancelled.toLowerCase();
-  }
 }
 
 class ProcessTaskFields{
