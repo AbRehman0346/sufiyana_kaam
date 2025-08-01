@@ -57,68 +57,6 @@ class Utils {
     );
   }
 
-  Future<DateTime?> selectDate(
-    BuildContext context, {
-    String helpText = "Select Date",
-  }) async {
-    var datetime = await showDialog(
-      context: context,
-      builder: (context) {
-        return DatePickerDialog(
-          firstDate: DateTime(1950),
-          lastDate: DateTime(2070),
-          initialDate: DateTime.now(),
-          helpText: helpText,
-        );
-      },
-    );
-    return datetime;
-  }
-
-  String toStringTime(TimeOfDay time) {
-    return "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
-  }
-
-  String toStringDate(DateTime date) {
-    return "${Utils().getMonthName(date.month)} ${date.day}, ${date.year}";
-  }
-
-  Future<TimeOfDay?> selectTime(
-    BuildContext context, {
-    String helpText = "Select Time",
-  }) async {
-    TimeOfDay timeofDay = await showDialog(
-      context: context,
-      builder: (context) {
-        return TimePickerDialog(
-          initialTime: TimeOfDay(hour: 12, minute: 00),
-          helpText: helpText,
-        );
-      },
-    );
-    return timeofDay;
-  }
-
-  String getMonthName(int monthNumber) {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-
-    if (monthNumber < 1 || monthNumber > 12) return 'Invalid month';
-    return months[monthNumber - 1];
-  }
-
   static void showToast(String message) {
     Fluttertoast.showToast(
       msg: message,

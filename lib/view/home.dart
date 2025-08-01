@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
@@ -139,13 +138,13 @@ class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => gotoNoteScreen(process),
+      onTap: () => _gotoNoteScreen(process),
       child: Container(
         height: 180,
         padding: const EdgeInsets.all(20),
         margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          gradient: getPriorityGradient(process.priority),
+          gradient: _getPriorityGradient(process.priority),
           borderRadius: BorderRadius.circular(30),
         ),
         child: Stack(
@@ -181,7 +180,7 @@ class _ProjectCard extends StatelessWidget {
                     int total = tasks.length;
 
                     for(int i=0; i<tasks.length; i++){
-                      if(tasks[i].isCompleted){
+                      if(tasks[i].status.isCompleted){
                         completed++;
                       }
                     }
@@ -214,14 +213,14 @@ class _ProjectCard extends StatelessWidget {
     );
   }
 
-  void gotoNoteScreen(Process process) {
+  void _gotoNoteScreen(Process process) {
     NavigatorService.goto(
       Routes.noteScreen,
       arguments: [process],
     );
   }
 
-  LinearGradient getPriorityGradient(String priority){
+  LinearGradient _getPriorityGradient(int priority){
     // blue gradient for high priority tasks
     var highPriorityGradient = LinearGradient(
       colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],

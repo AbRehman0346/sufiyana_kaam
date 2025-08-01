@@ -20,14 +20,15 @@ class XTextField extends StatelessWidget {
   final bool _filled;
   final bool _enabled;
   final bool _shadow;
+  final bool _dense;
   final Widget? _suffixIcon;
   final Widget? _prefixIcon;
   final TextEditingController? _controller;
-  final Function? _onChange;
+  final Function(String)? _onChange;
   final TextAlign _textAlign;
   final TextInputType? _keyboardType;
   final InputBorder? _border;
-  String _onChangeFunctionVariableValue = "default Value";
+  final FocusNode? _focusNode;
 
   XTextField({
     super.key,
@@ -50,14 +51,16 @@ class XTextField extends StatelessWidget {
     bool filled = false,
     bool enabled = true,
     bool shadow = false,
+    bool dense = false,
     Widget? suffixIcon,
     Widget? prefixIcon,
     InputBorder? border,
     TextEditingController? controller,
     // double height = 30,
     // double? width,
-    Function? onChange,
+    Function(String)? onChange,
     TextInputType? keyboardType,
+    FocusNode? focusNode,
     TextAlign textAlign = TextAlign.start,
   })  : _controller = controller,
         _prefixIcon = prefixIcon,
@@ -84,6 +87,8 @@ class XTextField extends StatelessWidget {
         _keyboardType = keyboardType,
         _textAlign = textAlign,
         _border = border,
+        _focusNode = focusNode,
+        _dense = dense,
         _label = label;
 
   @override
@@ -99,6 +104,7 @@ class XTextField extends StatelessWidget {
       prefixIcon: _prefixIcon,
       hintText: _hint,
       labelText: _label,
+      isDense: _dense,
       hintStyle: TextStyle(color: _hintTextColor),
       contentPadding: EdgeInsets.symmetric(vertical: _verticalContentPadding, horizontal: _horizontalContentPadding),
       border: _border ?? OutlineInputBorder(
@@ -134,14 +140,14 @@ class XTextField extends StatelessWidget {
               controller: _controller,
               obscureText: _obscureText,
               autocorrect: _autocorrect,
+              focusNode: _focusNode,
               enabled: _enabled,
               enableSuggestions: _enableSuggestions,
               keyboardType: _keyboardType,
               textAlign: _textAlign,
               onChanged: (s) {
                 if (_onChange != null) {
-                  _onChangeFunctionVariableValue = s;
-                  _onChange();
+                  _onChange(s);
                 }
               },
               maxLines: _maxLines,
@@ -154,6 +160,4 @@ class XTextField extends StatelessWidget {
       ],
     );
   }
-
-  String get onChangeString => _onChangeFunctionVariableValue;
 }

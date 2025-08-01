@@ -17,7 +17,7 @@ class CreateProcess extends StatefulWidget {
 
 class _CreateProcessState extends State<CreateProcess> {
   final _processNameController = TextEditingController();
-  String _priority = Priority().normal;
+  int _priority = Priority().normal;
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +57,10 @@ class _CreateProcessState extends State<CreateProcess> {
                   ),
 
                   XDropdown(
-                      items: Priority().all,
-                      selectedItem: _priority,
+                      items: Priority.all,
+                      selectedItem: Priority.getValue(_priority),
                     onChanged: (text){
-                      _priority = text!;
+                      _priority = Priority.getPriority(text!);
                     },
                   ),
                 ],

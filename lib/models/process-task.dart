@@ -1,38 +1,47 @@
 import 'dart:developer';
+import 'package:sufiyana_kaam/xutils/XDateTime.dart';
+
+import './process.dart' as process;
+import 'package:flutter/scheduler.dart';
 
 class ProcessTask{
   int? id;
   String title;
   String description;
-  String? date;
+  late _Date date;
   String? time;
   int order;
-  String priority;
-  String status;
+  int priority;
+  late _Status status;
   int processId;
   ProcessTask({
     this.id,
     required this.title,
     required this.description,
-    required this.date,
+    required String? date,
     required this.time,
     required this.order,
     required this.priority,
     required this.processId,
-    required this.status,
-  });
+    required String status,
+  }){
+    this.status = _Status(status);
+    this.date = _Date(date);
+  }
+
+  String get getPriorityValue => process.Priority.getValue(priority);
 
   Map<String, dynamic> toMap() {
     var f = ProcessTaskFields();
     return {
       f.title: title,
       f.description: description,
-      f.date: date,
+      f.date: date.date,
       f.time: time,
       f.order: order,
       f.priority: priority,
       f.processId: processId,
-      f.status: status,
+      f.status: status.status,
     };
   }
 
@@ -50,14 +59,37 @@ class ProcessTask{
       status: map[f.status] ?? "pending", // Default status if not provided
     );
   }
+}
 
+class _Status{
+  String status;
+  _Status(this.status);
   bool get isPending => status.toLowerCase() == ProcessTaskStatus.pending.toLowerCase();
-
   bool get isInProgress => status.toLowerCase() == ProcessTaskStatus.inProgress.toLowerCase();
-
   bool get isCompleted => status.toLowerCase() == ProcessTaskStatus.completed.toLowerCase();
-
   bool get isCancelled => status.toLowerCase() == ProcessTaskStatus.cancelled.toLowerCase();
+  bool isSameAs(String status) {
+    return this.status == status;
+  }
+}
+
+class _Date{
+  String? date;
+  _Date(this.date);
+
+  bool isToday() {
+    final today = DateTime.now();
+    return isSameDayAs(today);
+  }
+
+  bool isSameDayAs(DateTime otherDate) {
+    if(date == null) {
+      return false;
+    }
+
+    final DateTime taskDate = XDateTime().toDate(date!);
+    return taskDate.year == otherDate.year && taskDate.month == otherDate.month && taskDate.day == otherDate.day;
+  }
 }
 
 class ProcessTaskStatus {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/services/database-services.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
+import 'package:sufiyana_kaam/xutils/XDateTime.dart';
 import '../models/process-task.dart';
 import '../xutils/colors/AppColors.dart';
 import '../xutils/widgets/XButton.dart';
@@ -12,23 +13,23 @@ import '../xutils/widgets/xdropdown.dart';
 import '../xutils/widgets/xtext.dart';
 import '../xutils/widgets/xtextfield.dart';
 
-class CreateProcessTaskView extends StatefulWidget {
+class CreateTask extends StatefulWidget {
   int processId;
   void Function(ProcessTask process)? onTaskCreated;
-  CreateProcessTaskView({
+  CreateTask({
     super.key,
     required this.processId,
     this.onTaskCreated,
   });
 
   @override
-  State<CreateProcessTaskView> createState() => _CreateProcessTaskViewState();
+  State<CreateTask> createState() => _CreateTaskState();
 }
 
-class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
+class _CreateTaskState extends State<CreateTask> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-  String importance = Priority().normal;
+  int importance = Priority().normal;
   DateTime? _date;
   TimeOfDay? _timeOfDay;
 
@@ -68,7 +69,7 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
                 ),
                 child: XText(
                   _date != null
-                      ? Utils().toStringDate(_date!)
+                      ? XDateTime().toDateString(_date!)
                       :
                   "                          ",
                   color: Colors.white,
@@ -79,7 +80,8 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
               Utils.width(20),
               GestureDetector(
                 onTap: () async {
-                  _date = await Utils().selectDate(context);
+                  _date = await XDateTime().selectDate(context);
+                  FocusManager.instance.primaryFocus?.unfocus();
                   setState(() {});
                 },
                 child: Container(
@@ -106,7 +108,7 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
                 ),
                 child: XText(
                   _timeOfDay != null
-                      ? Utils().toStringTime(_timeOfDay!)
+                      ? XDateTime().toTimeString(_timeOfDay!)
                       :
                   "                          ",
                   color: Colors.white,
@@ -117,7 +119,8 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
               Utils.width(20),
               GestureDetector(
                 onTap: () async {
-                  _timeOfDay = await Utils().selectTime(context);
+                  _timeOfDay = await XDateTime().selectTime(context);
+                  FocusManager.instance.primaryFocus?.unfocus();
                   setState(() {});
                 },
                 child: Container(
@@ -135,11 +138,11 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
           SizedBox(
             width: Utils.screenWidth * 0.6,
             child: XDropdown(
-              items: Priority().all,
-              selectedItem: Priority().normal,
+              items: Priority.all,
+              selectedItem: Priority.getValue(Priority().normal),
               isExpanded: true,
               onChanged: (text){
-                importance = text!;
+                importance = Priority.getPriority(text!);
               },
             ),
           ),
@@ -165,10 +168,10 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
     String title = titleController.text.trim();
     String desc = descriptionController.text.trim();
     String? date = _date != null
-        ? "${Utils().getMonthName(_date!.month)} ${_date!.day}, ${_date!.year}"
+        ? XDateTime().toDateString(_date!)
         : null;
     String? time = _timeOfDay != null
-        ? "${_timeOfDay!.hour}:${_timeOfDay!.minute.toString().padLeft(2, '0')}"
+        ? XDateTime().toTimeString(_timeOfDay!)
         : null;
     if(title.isEmpty){
       Utils.showToast("Name is Mandatory");
@@ -190,9 +193,7 @@ class _CreateProcessTaskViewState extends State<CreateProcessTaskView> {
       status: ProcessTaskStatus.pending,
     );
 
-    int id = await DatabaseServices.create().insertProcessTask(task);
-
-    task.id = id;
+    task = await DatabaseServices.create().insertProcessTask(task);
 
     widget.onTaskCreated?.call(task);
     Utils.hideProgressBar();

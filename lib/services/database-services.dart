@@ -4,6 +4,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 import 'package:sufiyana_kaam/models/process.dart';
+import 'package:sufiyana_kaam/services/notification_service.dart';
+import 'package:sufiyana_kaam/xutils/XDateTime.dart';
 
 import '../models/process-task.dart';
 
@@ -29,7 +31,7 @@ class DatabaseServices{
     CREATE TABLE processes(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name TEXT NOT NULL,
-    priority TEXT NOT NULL
+    priority INT NOT NULL
 ); 
     """;
 
@@ -42,7 +44,7 @@ class DatabaseServices{
     task_date TEXT,
     task_time TEXT,
     task_order INTEGER NOT NULL,
-    priority TEXT NOT NULL,
+    priority INT NOT NULL,
     process_id INTEGER NOT NULL,
     status TEXT DEFAULT 'Pending'
   );
@@ -76,13 +78,13 @@ class DatabaseServices{
   Future<List<Map>> fetchProcesses() async {
     await _handleDatabaseBeingNull();
     String query = """
-    SELECT id, name, priority FROM processes    
+    SELECT id, name, priority FROM processes ORDER BY priority DESC   
     """;
     List<Map> response = await _database!.rawQuery(query);
     return response;
   }
 
-  Future<int> insertProcessTask(ProcessTask task) async {
+  Future<ProcessTask> insertProcessTask(ProcessTask task) async {
     await _handleDatabaseBeingNull();
     String insertQuery = """
     INSERT INTO process_tasks(title, description, task_date, task_time, task_order, priority, process_id)
@@ -91,13 +93,18 @@ class DatabaseServices{
     int id = await _database!.rawInsert(insertQuery, [
       task.title,
       task.description,
-      task.date,
+      task.date.date,
       task.time,
       task.order,
       task.priority,
       task.processId,
     ]);
-    return id;
+
+    task.id = id; // Set the ID back to the task object
+
+    NotificationService().scheduleNotificationBasedOnPriority(task);
+
+    return task;
   }
 
   Future<int> getProcessTaskCount(int processId) async {
@@ -121,6 +128,33 @@ class DatabaseServices{
     List<Map<String, dynamic>> response = await _database!.rawQuery(query, [processId]);
     List<ProcessTask> tasks = response.map((e) => ProcessTask.fromMap(e)).toList();
     return tasks;
+  }
+
+  Future<void> updateTask(ProcessTask task) async {
+    await _handleDatabaseBeingNull();
+    String updateQuery = """
+    UPDATE process_tasks 
+    SET title = ?,
+    description = ?,
+    task_date = ?,
+    task_time = ?,
+    priority = ?,
+    status = ?
+    WHERE id = ?
+    """;
+
+    await _database!.rawUpdate(updateQuery, [
+      task.title,
+      task.description,
+      task.date.date,
+      task.time,
+      task.priority,
+      task.status.status,
+      task.id,
+    ]);
+
+    // Reschedule notification if the task has a date or time
+    NotificationService().scheduleNotificationBasedOnPriority(task);
   }
 
   Future<void> sortProcessTasks(List<ProcessTask> tasks) async {
@@ -152,5 +186,6 @@ class DatabaseServices{
     DELETE FROM process_tasks WHERE id = ?
     """;
     await _database!.rawDelete(deleteQuery, [taskId]);
+    await NotificationService().cancelNotification(taskId);
   }
 }
