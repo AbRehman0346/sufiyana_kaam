@@ -13,4 +13,6 @@ class AppColors{
 
   //given to widgets like delete box..etc.
   static Color deleteColor = Colors.red;
+
+  static Color backgroundPrimary = Colors.white;
 }

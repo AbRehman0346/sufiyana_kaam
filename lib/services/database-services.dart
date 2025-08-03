@@ -188,4 +188,24 @@ class DatabaseServices{
     await _database!.rawDelete(deleteQuery, [taskId]);
     await NotificationService().cancelNotification(taskId);
   }
+
+  Future<void> deleteProcess(int i) async {
+    // Cancel all notifications associated with the process
+    await NotificationService().cancelAllNotificationsForProcess(i);
+
+
+    await _handleDatabaseBeingNull();
+
+    // Delete Process
+    String deleteProcessQuery = """
+    DELETE FROM processes WHERE id = ?
+    """;
+    await _database!.rawDelete(deleteProcessQuery, [i]);
+
+    // Delete all tasks associated with the process
+    String deleteTasksQuery = """
+    DELETE FROM process_tasks WHERE process_id = ?
+    """;
+    await _database!.rawDelete(deleteTasksQuery, [i]);
+  }
 }

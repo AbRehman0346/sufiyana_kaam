@@ -8,6 +8,7 @@ import 'package:sufiyana_kaam/view/create-process.dart';
 import 'package:sufiyana_kaam/view/create-task.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
 import 'package:sufiyana_kaam/xutils/NavigatorService.dart';
+import 'package:sufiyana_kaam/xutils/colors/AppColors.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
 import '../../xutils/widgets/utils.dart';
 
@@ -83,6 +84,9 @@ class _HomeState extends State<Home> {
                         var process = Process.fromMap(processes[index]);
                         return _ProjectCard(
                           process: process,
+                          setState: () => setState(() {
+                            _futureKey = UniqueKey(); // Refresh the FutureBuilder
+                          }),
                         );
                       }),
                     );
@@ -130,9 +134,11 @@ class _HomeState extends State<Home> {
 
 class _ProjectCard extends StatelessWidget {
   final Process process;
+  final Function()? setState;
   const _ProjectCard({
     super.key,
     required this.process,
+    this.setState,
   });
 
   @override
@@ -150,11 +156,48 @@ class _ProjectCard extends StatelessWidget {
         child: Stack(
           children: [
             // TODO: Options Button Here..Commented out for now
-            // Positioned(
-            //   top: 0,
-            //   left: 0,
-            //   child: Icon(Icons.more_horiz, color: Colors.white),
-            // ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: PopupMenuButton(
+                color: AppColors.backgroundPrimary,
+                  child: Icon(Icons.more_horiz, color: Colors.white),
+                  itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text('Edit Process'),
+                  ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text('Delete Process'),
+                  ),
+                ];
+              }, onSelected: (value) {
+                if(value == 'edit'){
+                  Utils.showToast("Functionality Still Needs to be developed");
+                } else if(value == 'delete'){
+                  Utils().showTwoButtonDialog(
+                    title: "Delete Process",
+                    message: "Are you sure you want to delete this process?",
+                    onYes: () async {
+                      if(process.id == null){
+                        Utils.showToast("Error: Can't Find Process Id");
+                        return;
+                      }
+                      Utils.showProgressBar(msg: "Deleting Process...");
+                      await DatabaseServices.create().deleteProcess(process.id!);
+                      Utils.showToast("Process deleted successfully");
+                      NavigatorService.pop();  // Close the Progress Dialog
+                      NavigatorService.pop(); //Close the Dialog
+                      if(setState != null) {
+                        setState!(); // Refresh the Home Screen
+                      }
+                    },
+                  );
+                }
+              }),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

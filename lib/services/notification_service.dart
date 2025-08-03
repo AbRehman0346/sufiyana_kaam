@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
+import 'package:sufiyana_kaam/services/database-services.dart';
 import 'package:sufiyana_kaam/xutils/XDateTime.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -170,5 +171,14 @@ class NotificationService {
 
   Future<void> cancelNotification(int id) async {
     await FlutterLocalNotificationsPlugin().cancel(id);
+  }
+
+  Future<void> cancelAllNotificationsForProcess(int processId) async {
+    List<ProcessTask> processes = await DatabaseServices.create().fetchProcessTasks(processId);
+    for (ProcessTask task in processes) {
+      if (task.id != null) {
+        await cancelNotification(task.id!);
+      }
+    }
   }
 }

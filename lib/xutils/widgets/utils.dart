@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
+import 'package:sufiyana_kaam/xutils/colors/AppColors.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
 
 import '../GlobalContext.dart';
@@ -117,5 +118,49 @@ class Utils {
         ],
       ),
     );
+  }
+
+  void showTwoButtonDialog({
+    required String title,
+    required String message,
+    required Function() onYes,
+    Function()? onNo,
+    String yesText = "Yes",
+    String noText = "No",
+  }) {
+    showDialog(context: GlobalContext.getContext, builder: (builder){
+        return SimpleDialog(
+          backgroundColor: AppColors.backgroundPrimary,
+          title: XText(title, bold: true),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: XText(message, size: 16, color: AppColors.blackText),
+            ),
+            Utils.height(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (onNo != null) {
+                      onNo();
+                    }else{
+                      Navigator.pop(GlobalContext.getContext);
+                    }
+                  },
+                  child: XText(noText, size: 16, bold: true),
+                ),
+                Utils.width(20),
+                ElevatedButton(
+                  onPressed: onYes,
+                  child: XText(yesText, size: 16, bold: true),
+                ),
+                Utils.width(20),
+              ],
+            ),
+          ],
+        );
+    });
   }
 }
