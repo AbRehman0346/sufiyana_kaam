@@ -1,10 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
 import 'package:sufiyana_kaam/services/database-services.dart';
-import 'package:sufiyana_kaam/view/create-process.dart';
+import 'package:sufiyana_kaam/view/home/create-process.dart';
 import 'package:sufiyana_kaam/view/create-task.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
 import 'package:sufiyana_kaam/xutils/NavigatorService.dart';
@@ -101,14 +102,14 @@ class _HomeState extends State<Home> {
         width: 100,
         child: FloatingActionButton(
           backgroundColor: Colors.blue,
-            onPressed: showCreateProcessForm,
+            onPressed: _showCreateProcessForm,
           child: XText("CREATE", color: Colors.white, size: 16, bold: true),
         ),
       ),
     );
   }
 
-  void showCreateProcessForm(){
+  void _showCreateProcessForm(){
     showDialog(context: GlobalContext.getContext, builder: (context){
       return SimpleDialog(
         children: [
@@ -175,7 +176,14 @@ class _ProjectCard extends StatelessWidget {
                 ];
               }, onSelected: (value) {
                 if(value == 'edit'){
-                  Utils.showToast("Functionality Still Needs to be developed");
+                  void onEdited(bool isEdited){
+                    Navigator.pop(context);
+                    Utils.showToast("UPDATED SUCCESSFULLY");
+                    if(setState != null){
+                      setState!();
+                    }
+                  }
+                  NavigatorService.goto(Routes.editProcess, arguments: [process, onEdited]);
                 } else if(value == 'delete'){
                   Utils().showTwoButtonDialog(
                     title: "Delete Process",

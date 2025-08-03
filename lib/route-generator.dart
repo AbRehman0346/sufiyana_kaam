@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/view/edit-task.dart';
+import 'package:sufiyana_kaam/view/home/editProcess.dart';
 import 'package:sufiyana_kaam/view/home/home.dart';
 import 'package:sufiyana_kaam/view/note_screen/note_screen.dart';
 import 'package:sufiyana_kaam/view/note_screen/reorder-notes-screen.dart';
@@ -16,6 +17,7 @@ class Routes{
   static const String ViewTask = '/viewTask';
   static const String editTask = '/editTask';
   static const String reorderNotesScreen = '/reorderNotesScreen';
+  static const String editProcess = "/edit-process";
 }
 
 class RouteGenerator {
@@ -32,6 +34,10 @@ class RouteGenerator {
         List data = args as List;
         Function()? onSortComplete = data.length > 1 ? data[1] as Function()? : null;
         return MaterialPageRoute(builder: (_) => ReorderNotesScreen(process: data[0] as Process, onSortComplete: onSortComplete,));
+      case Routes.editProcess:
+        List data = args as List;
+        Function(bool)? onEdited = data.length > 1 ? data[1] as Function(bool)? : null;
+        return MaterialPageRoute(builder: (_) => EditProcess(process: data[0], onProcessEdited: onEdited));
       case Routes.ViewTask:
         List data = args as List;
         return MaterialPageRoute(builder: (_) => ViewTask(

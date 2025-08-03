@@ -75,6 +75,17 @@ class DatabaseServices{
       await _database!.rawInsert(insertQuery, [process.name, process.priority]);
   }
 
+  Future<void> updateProcess(Process newProcess) async {
+    await _handleDatabaseBeingNull();
+    String updateQuery = """
+      UPDATE processes
+      SET name = ?,
+      priority = ?
+      WHERE id = ?
+    """;
+    await _database!.rawUpdate(updateQuery, [newProcess.name, newProcess.priority, newProcess.id]);
+  }
+
   Future<List<Map>> fetchProcesses() async {
     await _handleDatabaseBeingNull();
     String query = """
