@@ -5,10 +5,11 @@ import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
 import 'package:sufiyana_kaam/services/database-services.dart';
 import 'package:sufiyana_kaam/view/create-process.dart';
+import 'package:sufiyana_kaam/view/create-task.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
 import 'package:sufiyana_kaam/xutils/NavigatorService.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
-import '../xutils/widgets/utils.dart';
+import '../../xutils/widgets/utils.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -129,7 +130,6 @@ class _HomeState extends State<Home> {
 
 class _ProjectCard extends StatelessWidget {
   final Process process;
-
   const _ProjectCard({
     super.key,
     required this.process,
@@ -149,11 +149,12 @@ class _ProjectCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Icon(Icons.more_horiz, color: Colors.white),
-            ),
+            // TODO: Options Button Here..Commented out for now
+            // Positioned(
+            //   top: 0,
+            //   left: 0,
+            //   child: Icon(Icons.more_horiz, color: Colors.white),
+            // ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -196,20 +197,40 @@ class _ProjectCard extends StatelessWidget {
             Positioned(
               bottom: 0,
               right: 0,
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white38,
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.add, color: Colors.white),
+              child: GestureDetector(
+                onTap: () => _addTaskToProcess(process.id),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white38,
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.add, color: Colors.white),
+                  ),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _addTaskToProcess(int? processId) {
+
+    if(processId == null){
+      Utils().showSnackBar("Error: Can't Find Process Id");
+      return;
+    }
+
+    Utils().showBottomSheet(
+      handleScrolling: true,
+      children: [
+        CreateTask(
+          processId: processId,
+        ),
+      ],
     );
   }
 

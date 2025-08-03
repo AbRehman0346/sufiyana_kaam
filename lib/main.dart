@@ -5,7 +5,7 @@ import 'package:sufiyana_kaam/services/notification_service.dart';
 import 'package:sufiyana_kaam/services/permission-manager.dart';
 import 'package:sufiyana_kaam/view/TestScreen.dart';
 import 'package:sufiyana_kaam/view/create-task.dart';
-import 'package:sufiyana_kaam/view/home.dart';
+import 'package:sufiyana_kaam/view/home/home.dart';
 import 'package:sufiyana_kaam/view/note_screen/note_screen.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
 

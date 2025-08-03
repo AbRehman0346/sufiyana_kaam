@@ -69,6 +69,15 @@ class Utils {
     );
   }
 
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(GlobalContext.getContext).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   static void showProgressBar({String? msg}) {
     showDialog(
       barrierDismissible: false,

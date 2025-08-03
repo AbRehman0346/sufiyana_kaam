@@ -164,7 +164,33 @@ class _NoteScreenState extends State<NoteScreen> {
     return AppBar(
       title: XText(widget.process.name, bold: true, color: Colors.blue,),
         centerTitle: true,
+      actions: [
+        PopupMenuButton(
+          itemBuilder: (context){
+          return [
+            PopupMenuItem(
+              value: "sort",
+              child: XText("Sort Tasks", size: 15, color: AppColors.blackText, bold: true),
+            ),
+          ];
+        },
+          onSelected: _onPopupMenuSelected,
+        ),
+      ],
     );
+  }
+
+  void _onPopupMenuSelected(String value){
+    if(value == "sort"){
+      _gotoOrderScreen();
+    }
+  }
+
+  void _gotoOrderScreen(){
+    widget.process.tasks = _data;
+    NavigatorService.goto(Routes.reorderNotesScreen, arguments: [widget.process, (){
+      _reloadAllData();
+    }]);
   }
 
   Widget? _getFloatingActionButton(){
@@ -323,3 +349,4 @@ class _NoteScreenState extends State<NoteScreen> {
     _data.retainWhere((item) => item.title.toLowerCase().contains(_searchController.text.toLowerCase()));
   }
 }
+
