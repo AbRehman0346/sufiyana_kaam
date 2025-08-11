@@ -20,19 +20,19 @@ class PermissionManager {
 
   Future<bool> requestExectAlaramPermission() async {
     PermissionStatus permission = await Permission.scheduleExactAlarm.request();
-    log("------------Permission to schedule exact alarms: ${permission.isGranted}");
+    // log("------------Permission to schedule exact alarms: ${permission.isGranted}");
     return permission.isGranted;
   }
 
   Future<bool> ignoreBatteryOptimization() async {
     if (await Permission.ignoreBatteryOptimizations.isGranted) {
-      log("------------Permission to Battery Optimization: true");
+      // log("------------Permission to Battery Optimization: true");
       return true;
     }
 
     // Request permission to ignore battery optimizations
     PermissionStatus status = await Permission.ignoreBatteryOptimizations.request();
-    log("------------Permission to Battery Optimization: ${status.isGranted}");
+    // log("------------Permission to Battery Optimization: ${status.isGranted}");
     return status.isGranted;
   }
 }

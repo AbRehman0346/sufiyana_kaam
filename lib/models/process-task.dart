@@ -82,6 +82,13 @@ class _Date{
     return isSameDayAs(today);
   }
 
+  DateTime? toDateTime(){
+    if(date == null) {
+      return null;
+    }
+    return XDateTime().toDate(date!);
+  }
+
   bool isSameDayAs(DateTime otherDate) {
     if(date == null) {
       return false;

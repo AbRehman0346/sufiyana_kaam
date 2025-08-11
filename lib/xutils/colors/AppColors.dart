@@ -4,6 +4,7 @@ class AppColors{
   static Color primaryText = Colors.white;
   static Color secondaryText = Colors.blue;
   static Color blackText = Colors.black;
+  static Color selectionColor = Colors.blueGrey;
 
   static Color primary = Colors.blue;
 
