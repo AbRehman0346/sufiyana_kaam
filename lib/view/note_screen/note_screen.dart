@@ -225,9 +225,7 @@ class _NoteScreenState extends State<NoteScreen> {
         child: FloatingActionButton(
             child: XText("Create", size: 15,),
             onPressed: (){
-              setState(() {
-                _editMode = !_editMode;
-              });
+              _createTask();
             }),
       );
     }
