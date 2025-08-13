@@ -98,15 +98,28 @@ class _NoteScreenState extends State<NoteScreen> {
                             dense: true,
                             verticalContentPadding: 3,
                             controller: _searchController,
-                            onChange: (String? value) => setState(() {}),
+                            onChange: (String? value){
+                              if(_editMode){
+                                Utils().showSnackBar("Please Turn off the Edit Mode First.");
+                                _searchController.text = "";
+                              }
+                            },
                           ),
                         ),
                         Utils.width(20),
                         GestureDetector(
-                          onTap: () => _filter.showFilterDialog(
+                          onTap: (){
+                            if(_editMode){
+                              Utils().showSnackBar("Please Turn off the Edit Mode First.");
+                              return;
+                            }
+
+
+                            _filter.showFilterDialog(
                               context,
                               onFilterApplied: () => setState(() {}),
-                          ),
+                            );
+                          },
                           child: Icon(_filter.getFilterIcon(), size: 28),
                         ),
                       ],
@@ -202,6 +215,19 @@ class _NoteScreenState extends State<NoteScreen> {
 
     if(_data.isEmpty || !_showFloatingButton){
       return null;
+    }
+
+    if(_searchController.text.trim() != "" || _filter.isFilterApplied){
+      return SizedBox(
+        width: 100,
+        child: FloatingActionButton(
+            child: XText("Create", size: 15,),
+            onPressed: (){
+              setState(() {
+                _editMode = !_editMode;
+              });
+            }),
+      );
     }
 
     return SizedBox(
