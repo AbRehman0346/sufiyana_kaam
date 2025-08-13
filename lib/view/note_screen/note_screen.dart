@@ -102,7 +102,9 @@ class _NoteScreenState extends State<NoteScreen> {
                               if(_editMode){
                                 Utils().showSnackBar("Please Turn off the Edit Mode First.");
                                 _searchController.text = "";
+                                return;
                               }
+                              setState(() {});
                             },
                           ),
                         ),
