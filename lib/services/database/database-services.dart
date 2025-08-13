@@ -7,7 +7,8 @@ import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/services/notification_service.dart';
 import 'package:sufiyana_kaam/xutils/XDateTime.dart';
 
-import '../models/process-task.dart';
+import '../../models/process-task.dart';
+import '../../xutils/widgets/utils.dart';
 
 class DatabaseServices{
   // Singleton Class...
@@ -21,11 +22,10 @@ class DatabaseServices{
   }
 
   static Database? _database;
+  String databaseName = "data.db";
 
   Future<void> init() async {
-    var directory = await getDatabasesPath();
-
-    String databasePath = join(directory, "data.db");
+    String databasePath = await getDbPath();
 
     String createProcessTableQuery = """
     CREATE TABLE processes(
@@ -58,6 +58,11 @@ class DatabaseServices{
           await db.execute(createProcessTaskTableQuery);
       }
     );
+  }
+
+  Future<String> getDbPath() async {
+    final dbPath = await getDatabasesPath();
+    return join(dbPath, databaseName);
   }
 
   Future<void> _handleDatabaseBeingNull() async {
@@ -218,5 +223,13 @@ class DatabaseServices{
     DELETE FROM process_tasks WHERE process_id = ?
     """;
     await _database!.rawDelete(deleteTasksQuery, [i]);
+  }
+
+  Future<void> closeDatabase() async {
+    try {
+      await _database!.close();
+    } catch (_) {
+      Utils().showSnackBar("Error: Could not close the database.");
+    }
   }
 }

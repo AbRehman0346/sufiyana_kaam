@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
-import 'package:sufiyana_kaam/services/database-services.dart';
+import 'package:sufiyana_kaam/services/database/database-services.dart';
 import 'package:sufiyana_kaam/view/home/create-process.dart';
 import 'package:sufiyana_kaam/view/create-task.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
@@ -21,46 +21,39 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Key _futureKey = UniqueKey();
 
+  void gotoBackupView() {
+    NavigatorService.goto(Routes.backupView);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: AppColors.backgroundPrimary,
+      appBar: AppBar(
+        title: Text(
+          'Processes',
+          style: TextStyle(
+            color: AppColors.primaryText,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        actions: [
+          PopupMenuButton(
+            color: AppColors.backgroundPrimary,
+              iconColor: AppColors.primaryText,
+              itemBuilder: (context) => [
+            PopupMenuItem(onTap: gotoBackupView,child: XText("Backup Database")),
+          ])
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top bar
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      // Text(
-                      //   'Hello, Michael',
-                      //   style: TextStyle(fontSize: 16, color: Colors.black54),
-                      // ),
-                      // SizedBox(height: 4),
-                      Text(
-                        'Your Processes',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // const CircleAvatar(
-                  //   radius: 24,
-                  //   backgroundImage: NetworkImage('https://via.placeholder.com/150'),
-                  // ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
               // Project Cards
               Expanded(
                 child: FutureBuilder(

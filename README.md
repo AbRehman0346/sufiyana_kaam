@@ -4,7 +4,7 @@ A simple task management application built with flutter.
 
 
 
-
+Privacy Policy: https://sufiyana-kama-privacy-p0licy.netlify.app/
 
 
 

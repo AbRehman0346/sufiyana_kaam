@@ -18,6 +18,12 @@ class PermissionManager {
     await ignoreBatteryOptimization();
   }
 
+  Future<bool> requestManageExternalStoragePermission() async {
+    PermissionStatus permission = await Permission.manageExternalStorage.request();
+    // log("------------Permission to storage: ${permission.isGranted}");
+    return permission.isGranted;
+  }
+
   Future<bool> requestExectAlaramPermission() async {
     PermissionStatus permission = await Permission.scheduleExactAlarm.request();
     // log("------------Permission to schedule exact alarms: ${permission.isGranted}");

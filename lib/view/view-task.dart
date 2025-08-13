@@ -6,7 +6,7 @@ import 'package:sufiyana_kaam/route-generator.dart';
 import 'package:sufiyana_kaam/xutils/colors/AppColors.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtextfield.dart';
-import '../services/database-services.dart';
+import '../services/database/database-services.dart';
 import '../xutils/NavigatorService.dart';
 import '../xutils/widgets/XButton.dart';
 import '../xutils/widgets/utils.dart';

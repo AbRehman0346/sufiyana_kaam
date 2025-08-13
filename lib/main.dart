@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sufiyana_kaam/services/database-services.dart';
+import 'package:sufiyana_kaam/services/database/database-services.dart';
 import 'package:sufiyana_kaam/services/notification_service.dart';
 import 'package:sufiyana_kaam/services/permission-manager.dart';
 import 'package:sufiyana_kaam/view/TestScreen.dart';

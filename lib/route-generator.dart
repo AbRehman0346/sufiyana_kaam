@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
+import 'package:sufiyana_kaam/view/backup-view.dart';
 import 'package:sufiyana_kaam/view/edit-task.dart';
 import 'package:sufiyana_kaam/view/home/editProcess.dart';
 import 'package:sufiyana_kaam/view/home/home.dart';
@@ -18,6 +19,7 @@ class Routes{
   static const String editTask = '/editTask';
   static const String reorderNotesScreen = '/reorderNotesScreen';
   static const String editProcess = "/edit-process";
+  static const String backupView = '/backup-view';
 }
 
 class RouteGenerator {
@@ -50,6 +52,9 @@ class RouteGenerator {
           task: data[0] as ProcessTask,
           onTaskUpdated: data[1] as Function(ProcessTask)?,
       ));
+      case Routes.backupView: //HomeScreen
+        return MaterialPageRoute(builder: (_) => BackupView()
+      );
       // case Routes.createProcessTask:
       //   List data = args as List;
       //   return MaterialPageRoute(builder: (_) => CreateProcessTaskView(processId: data[0]));
