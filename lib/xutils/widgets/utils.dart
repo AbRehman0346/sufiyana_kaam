@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
+import 'package:sufiyana_kaam/xutils/NavigatorService.dart';
 import 'package:sufiyana_kaam/xutils/colors/AppColors.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
 
@@ -112,6 +114,34 @@ class Utils {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(GlobalContext.getContext);
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPrivacyPolicyDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: GlobalContext.getContext,
+      builder: (_) => SimpleDialog(
+        title: Text("Privacy Policy"),
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        children: [
+          Text("By Using Our App, You Agree to Our Privacy Policy."),
+          Utils.height(10),
+          TextButton(onPressed: (){
+            NavigatorService.goto(Routes.privacyPolicy);
+          }, child: XText("Click Here to visit privacy policy page")),
+
+          height(20),
+          ElevatedButton(
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setBool('privacy_policy_accepted', true);
+              NavigatorService.pop();
             },
             child: const Text("OK"),
           ),

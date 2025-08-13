@@ -6,6 +6,7 @@ import 'package:sufiyana_kaam/view/home/editProcess.dart';
 import 'package:sufiyana_kaam/view/home/home.dart';
 import 'package:sufiyana_kaam/view/note_screen/note_screen.dart';
 import 'package:sufiyana_kaam/view/note_screen/reorder-notes-screen.dart';
+import 'package:sufiyana_kaam/view/privacy-policy-view.dart';
 import 'package:sufiyana_kaam/view/view-task.dart';
 
 import 'models/process.dart';
@@ -20,6 +21,7 @@ class Routes{
   static const String reorderNotesScreen = '/reorderNotesScreen';
   static const String editProcess = "/edit-process";
   static const String backupView = '/backup-view';
+  static const String privacyPolicy = '/privacy-policy';
 }
 
 class RouteGenerator {
@@ -54,6 +56,9 @@ class RouteGenerator {
       ));
       case Routes.backupView: //HomeScreen
         return MaterialPageRoute(builder: (_) => BackupView()
+      );
+      case Routes.privacyPolicy: //HomeScreen
+        return MaterialPageRoute(builder: (_) => PrivacyPolicyScreen()
       );
       // case Routes.createProcessTask:
       //   List data = args as List;

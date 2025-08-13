@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
@@ -25,8 +26,22 @@ class _HomeState extends State<Home> {
     NavigatorService.goto(Routes.backupView);
   }
 
+  void gotoPrivacyPolicy() {
+    NavigatorService.goto(Routes.privacyPolicy);
+  }
+
+  void _handlePrivacyPolicy() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isAccepted = prefs.getBool('privacy_policy_accepted') ?? false;
+
+    if (!isAccepted) {
+      Utils().showPrivacyPolicyDialog();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _handlePrivacyPolicy();
     return Scaffold(
       backgroundColor: AppColors.backgroundPrimary,
       appBar: AppBar(
@@ -45,7 +60,8 @@ class _HomeState extends State<Home> {
               iconColor: AppColors.primaryText,
               itemBuilder: (context) => [
             PopupMenuItem(onTap: gotoBackupView,child: XText("Backup Database")),
-          ])
+            PopupMenuItem(onTap: gotoPrivacyPolicy,child: XText("Privacy Policy")),
+          ]),
         ],
       ),
       body: SafeArea(
