@@ -2,16 +2,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sufiyana_kaam/models/online-version.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
 import 'package:sufiyana_kaam/models/process.dart';
 import 'package:sufiyana_kaam/route-generator.dart';
 import 'package:sufiyana_kaam/services/database/database-services.dart';
 import 'package:sufiyana_kaam/view/home/create-process.dart';
 import 'package:sufiyana_kaam/view/create-task.dart';
+import 'package:sufiyana_kaam/view/udpate_app/version-update-dialog.dart';
 import 'package:sufiyana_kaam/xutils/GlobalContext.dart';
 import 'package:sufiyana_kaam/xutils/NavigatorService.dart';
 import 'package:sufiyana_kaam/xutils/colors/AppColors.dart';
 import 'package:sufiyana_kaam/xutils/widgets/xtext.dart';
+import '../../services/version/version.dart';
 import '../../xutils/widgets/utils.dart';
 
 class Home extends StatefulWidget {
@@ -39,9 +42,19 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _initApp(){
+    Version().init();
+    _handlePrivacyPolicy();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initApp();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _handlePrivacyPolicy();
     return Scaffold(
       backgroundColor: AppColors.backgroundPrimary,
       appBar: AppBar(
@@ -61,6 +74,7 @@ class _HomeState extends State<Home> {
               itemBuilder: (context) => [
             PopupMenuItem(onTap: gotoBackupView,child: XText("Backup Database")),
             PopupMenuItem(onTap: gotoPrivacyPolicy,child: XText("Privacy Policy")),
+            PopupMenuItem(onTap: _checkVersion,child: XText("Check Version")),
           ]),
         ],
       ),
@@ -139,6 +153,18 @@ class _HomeState extends State<Home> {
         ],
       );
     });
+  }
+
+  Future<void> _checkVersion() async {
+    Utils.showProgressBar();
+    VersionModel model = await Version().checkAppVersion();
+    Utils.hideProgressBar();
+
+    if(model.isLatest){
+      Utils().showOKDialog("About", "App is at it's Latest Version");
+    }else{
+      Version().actionOnVersion(model);
+    }
   }
 }
 

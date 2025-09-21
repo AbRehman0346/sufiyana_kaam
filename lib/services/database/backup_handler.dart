@@ -14,7 +14,7 @@ class DatabaseBackupHelper {
 
   /// Backup database to Downloads folder
   Future<void> backupDatabase() async {
-    final status = await PermissionManager().requestManageExternalStoragePermission();
+    final status = await PermissionManager().requestStoragePermission();
     if (!status) {
       throw Exception('Storage permission not granted');
     }

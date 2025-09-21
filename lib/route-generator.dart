@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sufiyana_kaam/models/process-task.dart';
+import 'package:sufiyana_kaam/services/version/version.dart';
 import 'package:sufiyana_kaam/view/backup-view.dart';
 import 'package:sufiyana_kaam/view/edit-task.dart';
 import 'package:sufiyana_kaam/view/home/editProcess.dart';
@@ -7,8 +8,8 @@ import 'package:sufiyana_kaam/view/home/home.dart';
 import 'package:sufiyana_kaam/view/note_screen/note_screen.dart';
 import 'package:sufiyana_kaam/view/note_screen/reorder-notes-screen.dart';
 import 'package:sufiyana_kaam/view/privacy-policy-view.dart';
+import 'package:sufiyana_kaam/view/udpate_app/version-update-screen.dart';
 import 'package:sufiyana_kaam/view/view-task.dart';
-
 import 'models/process.dart';
 
 class Routes{
@@ -22,6 +23,7 @@ class Routes{
   static const String editProcess = "/edit-process";
   static const String backupView = '/backup-view';
   static const String privacyPolicy = '/privacy-policy';
+  static const String versionUpdateScreen = "/update-version";
 }
 
 class RouteGenerator {
@@ -59,6 +61,9 @@ class RouteGenerator {
       );
       case Routes.privacyPolicy: //HomeScreen
         return MaterialPageRoute(builder: (_) => PrivacyPolicyScreen()
+      );
+      case Routes.versionUpdateScreen: //HomeScreen
+        return MaterialPageRoute(builder: (_) => VersionUpdateScreen()
       );
       // case Routes.createProcessTask:
       //   List data = args as List;

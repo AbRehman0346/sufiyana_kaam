@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 class PermissionManager {
@@ -18,9 +20,17 @@ class PermissionManager {
     await ignoreBatteryOptimization();
   }
 
-  Future<bool> requestManageExternalStoragePermission() async {
-    PermissionStatus permission = await Permission.manageExternalStorage.request();
-    // log("------------Permission to storage: ${permission.isGranted}");
+  Future<bool> requestStoragePermission() async {
+    PermissionStatus permission;
+
+    if (Platform.isAndroid && (await DeviceInfoPlugin().androidInfo).version.sdkInt >= 30) {
+      // Android 11+
+      permission = await Permission.manageExternalStorage.request();
+    } else {
+      // Android 10 and below
+      permission = await Permission.storage.request();
+    }
+
     return permission.isGranted;
   }
 

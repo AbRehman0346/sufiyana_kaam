@@ -108,7 +108,8 @@ class Utils {
     showDialog(
       context: GlobalContext.getContext,
       builder: (_) => AlertDialog(
-        title: Text(title),
+        backgroundColor: Colors.white,
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold),),
         content: Text(content),
         actions: [
           ElevatedButton(
